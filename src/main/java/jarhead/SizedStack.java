@@ -3,6 +3,7 @@ package jarhead;
 import java.util.Stack;
 
 public class SizedStack<Node> extends Stack<Node> {
+
     private final int maxSize;
 
     public SizedStack(int size) {

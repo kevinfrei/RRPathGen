@@ -2,20 +2,19 @@ package jarhead;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
 import jarhead.InfoPanel.InfoPanel;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.*;
 import java.util.*;
+import javax.swing.*;
 
 public class Main extends JFrame {
 
     public static boolean debug = false;
 
     private ProgramProperties properties;
-    public double scale = 1;// = Toolkit.getDefaultToolkit().getScreenSize().height > 1080 ? 8 : 6; //set scale to 6 for 1080p and 8 for 1440p
+    public double scale = 1; // = Toolkit.getDefaultToolkit().getScreenSize().height > 1080 ? 8 : 6; //set scale to 6 for 1080p and 8 for 1440p
     private NodeManager currentManager = new NodeManager(new ArrayList<>(), 0);
     private LinkedList<NodeManager> managers = new LinkedList<>();
 
@@ -24,10 +23,10 @@ public class Main extends JFrame {
     public ButtonPanel buttonPanel;
     public ExportPanel exportPanel;
 
-
     public int currentM = 0;
     public int currentN = -1;
     public int currentMarker = -1;
+
     public Main() {
         FlatDarculaLaf.setup();
         loadConfig();
@@ -37,52 +36,52 @@ public class Main extends JFrame {
     }
 
     public static void main(String[] args) throws IOException {
-        if(args.length > 0 && args[0].matches("debug")) debug = true;
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Main().setVisible(true);
+        if (args.length > 0 && args[0].matches("debug")) debug = true;
+        EventQueue.invokeLater(
+            new Runnable() {
+                public void run() {
+                    new Main().setVisible(true);
+                }
             }
-        });
+        );
     }
 
     public void reloadConfig() {
-        try{
+        try {
             drawPanel.getPreferredSize();
-            scale = ((double)drawPanel.getHeight())/144.0; //set scale to 6 for 1080p and 8 for 1440p
+            scale = ((double) drawPanel.getHeight()) / 144.0; //set scale to 6 for 1080p and 8 for 1440p
             properties.reload();
-
 
             infoPanel.settingsPanel.update();
             drawPanel.update();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void loadConfig() {
-        try{
+        try {
             String os = System.getProperty("os.name").toLowerCase();
             String path;
-            if(os.contains("win"))
-                path = System.getenv("AppData") + "/RRPathGen/config.properties";
-            else if(os.contains("mac") || os.contains("darwin"))
-                path = System.getProperty("user.home") + "/Library/Application Support/RRPathGen/config.properties";
-            else
-                path = System.getProperty("user.home") + "/.RRPathGen/config.properties";
+            if (os.contains("win")) path = System.getenv("AppData") +
+            "/RRPathGen/config.properties";
+            else if (os.contains("mac") || os.contains("darwin")) path = System.getProperty(
+                "user.home"
+            ) +
+            "/Library/Application Support/RRPathGen/config.properties";
+            else path = System.getProperty("user.home") + "/.RRPathGen/config.properties";
             properties = new ProgramProperties(new File(path));
-
-
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void initComponents() {
         this.setTitle("RRPathGen");
-        this.setSize(800,800);
+        this.setSize(800, 800);
         exportPanel = new ExportPanel(this);
-        drawPanel = new DrawPanel(managers,this, properties);
-        buttonPanel = new ButtonPanel(managers,this, properties);
+        drawPanel = new DrawPanel(managers, this, properties);
+        buttonPanel = new ButtonPanel(managers, this, properties);
         infoPanel = new InfoPanel(this, properties);
         this.getContentPane().setBackground(Color.darkGray.darker());
         GridBagLayout layout = new GridBagLayout();
@@ -133,39 +132,41 @@ public class Main extends JFrame {
         this.setBackground(Color.pink.darker());
         this.update(this.getGraphics());
 
-        this.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                reloadConfig();
-            }
-        });
+        this.addComponentListener(
+                new ComponentAdapter() {
+                    public void componentResized(ComponentEvent e) {
+                        reloadConfig();
+                    }
+                }
+            );
     }
 
     public void flip() {
         for (int i = 0; i < getCurrentManager().size(); i++) {
             Node node = getCurrentManager().get(i);
-            node.y = 144*scale-node.y;
-            node.splineHeading = 180-node.splineHeading;
-            node.robotHeading = 180-node.robotHeading;
+            node.y = 144 * scale - node.y;
+            node.splineHeading = 180 - node.splineHeading;
+            node.robotHeading = 180 - node.robotHeading;
             getCurrentManager().set(i, node);
         }
     }
 
-    public void undo(boolean record){
-        if(getCurrentManager().undo.size()<1) return;
+    public void undo(boolean record) {
+        if (getCurrentManager().undo.size() < 1) return;
         Node node = getCurrentManager().undo.peek();
         switch (node.state) {
             case ADD:
                 node = getCurrentManager().get(node.index);
                 node.state = Node.State.ADD;
                 getCurrentManager().remove(node.index);
-                currentN = node.index-1;
+                currentN = node.index - 1;
                 break;
             case DELETE:
                 getCurrentManager().add(node.index, node);
                 currentN = node.index;
                 break;
             case DRAG:
-                if(node.index == -1) {
+                if (node.index == -1) {
                     node.index = getCurrentManager().size() - 1;
                 }
                 Node temp = getCurrentManager().get(node.index);
@@ -180,12 +181,13 @@ public class Main extends JFrame {
         if (record) getCurrentManager().redo.add(node);
         getCurrentManager().undo.pop();
     }
-    public void redo(){
-        if(getCurrentManager().redo.size()<1) return;
+
+    public void redo() {
+        if (getCurrentManager().redo.size() < 1) return;
         Node node = getCurrentManager().redo.peek();
 
         //TODO: fix undo and redo
-        switch (node.state){
+        switch (node.state) {
             case ADD:
                 getCurrentManager().add(node.index, node);
                 currentN = node.index;
@@ -196,8 +198,8 @@ public class Main extends JFrame {
                 getCurrentManager().remove(node.index);
                 break;
             case DRAG:
-                if(node.index == -1){
-                    node.index = getCurrentManager().size()-1;
+                if (node.index == -1) {
+                    node.index = getCurrentManager().size() - 1;
                 }
                 Node temp = getCurrentManager().get(node.index);
                 temp.state = Node.State.DRAG;
@@ -216,21 +218,22 @@ public class Main extends JFrame {
         properties.save();
     }
 
-    public double toInches(double in){
-        return (1.0/scale * in)-72;
+    public double toInches(double in) {
+        return ((1.0 / scale) * in) - 72;
     }
 
-    public void scale(NodeManager manager, double ns, double os){
+    public void scale(NodeManager manager, double ns, double os) {
         for (int j = 0; j < manager.size(); j++) {
             Node n = manager.get(j);
-            n.x = (n.x/os)*ns;
-            n.y = (n.y/os)*ns;
+            n.x = (n.x / os) * ns;
+            n.y = (n.y / os) * ns;
         }
     }
-    public void scale(Stack<Node> manager, double ns, double os){
+
+    public void scale(Stack<Node> manager, double ns, double os) {
         for (Node n : manager) {
-            n.x = (n.x/os)*ns;
-            n.y = (n.y/os)*ns;
+            n.x = (n.x / os) * ns;
+            n.y = (n.y / os) * ns;
         }
     }
 
@@ -243,4 +246,3 @@ public class Main extends JFrame {
         return managers;
     }
 }
-

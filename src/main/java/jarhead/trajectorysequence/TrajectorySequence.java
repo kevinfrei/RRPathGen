@@ -1,13 +1,12 @@
 package jarhead.trajectorysequence;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-
 import jarhead.trajectorysequence.sequencesegment.SequenceSegment;
-
 import java.util.Collections;
 import java.util.List;
 
 public class TrajectorySequence {
+
     private final List<SequenceSegment> sequenceList;
 
     public TrajectorySequence(List<SequenceSegment> sequenceList) {

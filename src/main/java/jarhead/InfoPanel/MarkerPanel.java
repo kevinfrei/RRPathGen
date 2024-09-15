@@ -4,10 +4,9 @@ import jarhead.Main;
 import jarhead.Marker;
 import jarhead.Node;
 import jarhead.SpringUtilities;
-
+import java.text.NumberFormat;
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
-import java.text.NumberFormat;
 
 public class MarkerPanel extends JPanel {
 
@@ -20,7 +19,7 @@ public class MarkerPanel extends JPanel {
     private final JTextField name = new JTextField(10);
 
     //TODO: add the trajectory name
-    MarkerPanel(Main main){
+    MarkerPanel(Main main) {
         this.main = main;
         JComboBox<Node.Type> type = new JComboBox<>(Marker.Type.values());
         type.setSelectedIndex(0);
@@ -46,13 +45,14 @@ public class MarkerPanel extends JPanel {
         lType.setLabelFor(type);
         this.add(type);
 
-        SpringUtilities.makeCompactGrid(this,4,2,6,6,6,6);
+        SpringUtilities.makeCompactGrid(this, 4, 2, 6, 6, 6, 6);
 
         this.setVisible(true);
 
-
         displacement.addActionListener(e -> {
-            if(main.currentMarker != -1) getCurrentMarker().displacement = Double.parseDouble(displacement.getText());
+            if (main.currentMarker != -1) getCurrentMarker().displacement = Double.parseDouble(
+                displacement.getText()
+            );
             main.drawPanel.repaint();
         });
 
@@ -61,15 +61,15 @@ public class MarkerPanel extends JPanel {
         });
 
         code.addActionListener(e -> {
-            if(main.currentMarker != -1) {
+            if (main.currentMarker != -1) {
                 getCurrentMarker().code = code.getText();
             }
             main.drawPanel.repaint();
         });
     }
 
-    public void saveValues(){
-        if(main.currentMarker == -1) return;
+    public void saveValues() {
+        if (main.currentMarker == -1) return;
 
         Marker marker = getCurrentMarker();
         main.getCurrentManager().name = name.getText();
@@ -77,18 +77,19 @@ public class MarkerPanel extends JPanel {
         marker.displacement = Double.parseDouble(displacement.getText());
         main.drawPanel.repaint();
     }
-    private Marker getCurrentMarker(){
+
+    private Marker getCurrentMarker() {
         return main.getCurrentManager().getMarkers().get(main.currentMarker);
     }
 
     public void updateText() {
-        if(main.currentMarker == -1){
+        if (main.currentMarker == -1) {
             code.setText("");
             displacement.setText("0");
             name.setText(main.getCurrentManager().name);
         } else {
             code.setText(getCurrentMarker().code);
-            displacement.setText(String.format("%.2f",getCurrentMarker().displacement));
+            displacement.setText(String.format("%.2f", getCurrentMarker().displacement));
             name.setText(main.getCurrentManager().name);
         }
     }

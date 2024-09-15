@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.Properties;
 
 public class ProgramProperties {
+
     public double robotWidth;
     public double robotLength;
     public double resolution;
@@ -18,7 +19,7 @@ public class ProgramProperties {
 
     public ProgramProperties(File file) {
         this.file = file;
-        if(!file.exists()) {
+        if (!file.exists()) {
             generateFile(file);
         }
         prop = new Properties();
@@ -27,8 +28,8 @@ public class ProgramProperties {
         reload();
     }
 
-    public void reload(){
-        try{
+    public void reload() {
+        try {
             robotLength = Double.parseDouble(prop.getProperty("ROBOT_LENGTH"));
             robotWidth = Double.parseDouble(prop.getProperty("ROBOT_WIDTH"));
             resolution = Double.parseDouble(prop.getProperty("RESOLUTION"));
@@ -38,11 +39,10 @@ public class ProgramProperties {
             maxAccel = Double.parseDouble(prop.getProperty("MAX_ACCEL"));
             maxAngVelo = Double.parseDouble(prop.getProperty("MAX_ANGULAR_VELO"));
             maxAngAccel = Double.parseDouble(prop.getProperty("MAX_ANGULAR_ACCEL"));
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             prop = new Properties();
             generateFile(file);
         }
-
     }
 
     private void generateFile(File file) {
@@ -51,15 +51,15 @@ public class ProgramProperties {
             file.createNewFile();
             FileWriter writer = new FileWriter(file, false);
             writer.write(
-                    "ROBOT_WIDTH=18\n" +
-                    "ROBOT_LENGTH=18\n" +
-                    "RESOLUTION=0.1\n" +
-                    "IMPORT/EXPORT=\n" +
-                    "TRACK_WIDTH=15\n" +
-                    "MAX_VELO=60\n" +
-                    "MAX_ACCEL=60\n" +
-                    "MAX_ANGULAR_VELO=60\n" +
-                    "MAX_ANGULAR_ACCEL=60"
+                "ROBOT_WIDTH=18\n" +
+                "ROBOT_LENGTH=18\n" +
+                "RESOLUTION=0.1\n" +
+                "IMPORT/EXPORT=\n" +
+                "TRACK_WIDTH=15\n" +
+                "MAX_VELO=60\n" +
+                "MAX_ACCEL=60\n" +
+                "MAX_ANGULAR_VELO=60\n" +
+                "MAX_ANGULAR_ACCEL=60"
             );
             writer.close();
             readFile(file);
@@ -68,20 +68,19 @@ public class ProgramProperties {
         }
     }
 
-    public void readFile(File file){
-        try (FileInputStream in = new FileInputStream(file)){
+    public void readFile(File file) {
+        try (FileInputStream in = new FileInputStream(file)) {
             prop.load(in);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void save(){
-        try (FileOutputStream out = new FileOutputStream(file)){
+    public void save() {
+        try (FileOutputStream out = new FileOutputStream(file)) {
             prop.store(out, "V1.3");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }

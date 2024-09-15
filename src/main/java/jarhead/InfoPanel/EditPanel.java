@@ -3,10 +3,9 @@ package jarhead.InfoPanel;
 import jarhead.Main;
 import jarhead.Node;
 import jarhead.SpringUtilities;
-
+import java.text.NumberFormat;
 import javax.swing.*;
 import javax.swing.text.NumberFormatter;
-import java.text.NumberFormat;
 
 public class EditPanel extends JPanel {
 
@@ -21,7 +20,7 @@ public class EditPanel extends JPanel {
     protected JTextField name = new JTextField(10);
     private final JComboBox<Node.Type> type;
 
-    EditPanel(Main main){
+    EditPanel(Main main) {
         this.main = main;
         this.setOpaque(true);
         this.setLayout(new SpringLayout());
@@ -33,7 +32,7 @@ public class EditPanel extends JPanel {
         JLabel lType = new JLabel("Type: ", JLabel.TRAILING);
 
         type = new JComboBox<>(Node.Type.values());
-//        type = new JComboBox(Arrays.stream(Node.Type.values()).filter(i -> i.toString().contains("line")).toArray());
+        //        type = new JComboBox(Arrays.stream(Node.Type.values()).filter(i -> i.toString().contains("line")).toArray());
 
         type.setSelectedIndex(-1);
 
@@ -61,7 +60,7 @@ public class EditPanel extends JPanel {
         lType.setLabelFor(type);
         this.add(type);
 
-        SpringUtilities.makeCompactGrid(this,6,2,6,6,6,6);
+        SpringUtilities.makeCompactGrid(this, 6, 2, 6, 6, 6, 6);
         this.setVisible(true);
 
         name.addActionListener(e -> {
@@ -70,67 +69,72 @@ public class EditPanel extends JPanel {
         });
 
         x.addActionListener(e -> {
-            if(main.currentN == -1) return;
-            getCurrentNode().x = (Double.parseDouble(x.getText())+72)*main.scale;
+            if (main.currentN == -1) return;
+            getCurrentNode().x = (Double.parseDouble(x.getText()) + 72) * main.scale;
             main.drawPanel.repaint();
         });
 
         y.addActionListener(e -> {
-            if(main.currentN == -1) return;
-            getCurrentNode().y = (72-Double.parseDouble(y.getText()))*main.scale;
+            if (main.currentN == -1) return;
+            getCurrentNode().y = (72 - Double.parseDouble(y.getText())) * main.scale;
             main.drawPanel.repaint();
         });
 
         splineHeading.addActionListener(e -> {
-            if(main.currentN == -1) return;
-            getCurrentNode().splineHeading = Double.parseDouble(splineHeading.getText())-90;
+            if (main.currentN == -1) return;
+            getCurrentNode().splineHeading = Double.parseDouble(splineHeading.getText()) - 90;
             main.drawPanel.repaint();
         });
 
         robotHeading.addActionListener(e -> {
-            if(main.currentN == -1) return;
-            getCurrentNode().robotHeading = Double.parseDouble(robotHeading.getText())-90;
+            if (main.currentN == -1) return;
+            getCurrentNode().robotHeading = Double.parseDouble(robotHeading.getText()) - 90;
             main.drawPanel.repaint();
         });
 
         type.addActionListener(e -> {
-            if(main.currentN == -1) return;
+            if (main.currentN == -1) return;
             getCurrentNode().setType(type.getItemAt(type.getSelectedIndex()));
             main.drawPanel.repaint();
         });
     }
 
     //TOOD move into main
-    public void saveValues(){
-        if(main.currentN == -1) return;
+    public void saveValues() {
+        if (main.currentN == -1) return;
 
         Node node = getCurrentNode();
         main.getCurrentManager().name = name.getText();
 
-        node.x = (Double.parseDouble(x.getText())+72)*main.scale;
-        node.y = (72-Double.parseDouble(y.getText()))*main.scale;
-        node.splineHeading = Double.parseDouble(splineHeading.getText())-90;
-        node.robotHeading = Double.parseDouble(robotHeading.getText())-90;
+        node.x = (Double.parseDouble(x.getText()) + 72) * main.scale;
+        node.y = (72 - Double.parseDouble(y.getText())) * main.scale;
+        node.splineHeading = Double.parseDouble(splineHeading.getText()) - 90;
+        node.robotHeading = Double.parseDouble(robotHeading.getText()) - 90;
 
         node.setType(type.getItemAt(type.getSelectedIndex()));
         main.drawPanel.repaint();
     }
-    private Node getCurrentNode(){
+
+    private Node getCurrentNode() {
         return main.getCurrentManager().get(main.currentN);
     }
 
     public void updateText() {
-        if(main.currentN == -1){
+        if (main.currentN == -1) {
             splineHeading.setText("");
             robotHeading.setText("");
             x.setText("");
             y.setText("");
             type.setSelectedIndex(-1);
         } else {
-            splineHeading.setText(Math.round((getCurrentNode().splineHeading+90)*100)/100.0 + "");
-            robotHeading.setText(Math.round((getCurrentNode().robotHeading+90)*100)/100.0 + "");
-            x.setText(Math.round(main.toInches(getCurrentNode().x)*100.0)/100.0 + "");
-            y.setText(Math.round((-main.toInches(getCurrentNode().y))*100.0)/100.0 + "");
+            splineHeading.setText(
+                Math.round((getCurrentNode().splineHeading + 90) * 100) / 100.0 + ""
+            );
+            robotHeading.setText(
+                Math.round((getCurrentNode().robotHeading + 90) * 100) / 100.0 + ""
+            );
+            x.setText(Math.round(main.toInches(getCurrentNode().x) * 100.0) / 100.0 + "");
+            y.setText(Math.round((-main.toInches(getCurrentNode().y)) * 100.0) / 100.0 + "");
             type.setSelectedItem(getCurrentNode().getType());
         }
         name.setText(main.getCurrentManager().name);

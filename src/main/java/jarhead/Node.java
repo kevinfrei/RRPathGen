@@ -1,6 +1,7 @@
 package jarhead;
 
 public class Node {
+
     public double x;
     public double y;
     public double splineHeading;
@@ -13,8 +14,9 @@ public class Node {
         DELETE,
         ADD,
         DRAG,
-        FLIP
+        FLIP,
     }
+
     public State state;
     public boolean reversed = false;
 
@@ -31,25 +33,24 @@ public class Node {
         lineToConstantHeading,
         addTemporalMarker,
     }
-    Node(){
 
-    }
+    Node() {}
 
-    Node(java.awt.Point p){
+    Node(java.awt.Point p) {
         this.x = p.x;
         this.y = p.y;
-
     }
-    Node(double x, double y){
+
+    Node(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    Node(int index){
+    Node(int index) {
         this.index = index;
     }
 
-    Node(double x, double y, double splineHeading, int index){
+    Node(double x, double y, double splineHeading, int index) {
         this.x = x;
         this.y = y;
         this.splineHeading = splineHeading;
@@ -62,18 +63,20 @@ public class Node {
         return Math.sqrt(px * px + py * py);
     }
 
-    public void setType(Type t){
+    public void setType(Type t) {
         this.type = t;
     }
-    public Type getType(){
+
+    public Type getType() {
         return this.type;
     }
-    public void setLocation(Node p){
+
+    public void setLocation(Node p) {
         this.x = p.x;
         this.y = p.y;
     }
 
-    public Node copy(){
+    public Node copy() {
         Node node = new Node(this.x, this.y, this.splineHeading, this.index);
         node.state = this.state;
         node.type = this.type;
@@ -82,20 +85,31 @@ public class Node {
         return node;
     }
 
-    public Node shrink(double scale){
+    public Node shrink(double scale) {
         Node node = copy();
         node.x /= scale;
         node.y /= scale;
         return node;
     }
 
-    public double headingTo(Node n){
+    public double headingTo(Node n) {
         return (Math.toDegrees(Math.atan2(this.x - n.x, this.y - n.y)));
     }
 
     @Override
-    public String toString(){
-
-        return "{x: " + x + " y: " + y + " robotHeading: " + robotHeading + " spline heading: " + splineHeading + " type: " + type + "}";
+    public String toString() {
+        return (
+            "{x: " +
+            x +
+            " y: " +
+            y +
+            " robotHeading: " +
+            robotHeading +
+            " spline heading: " +
+            splineHeading +
+            " type: " +
+            type +
+            "}"
+        );
     }
 }

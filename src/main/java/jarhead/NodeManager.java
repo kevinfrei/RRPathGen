@@ -14,55 +14,63 @@ public class NodeManager {
     private final ArrayList<Node> nodes;
     public String name;
 
-    NodeManager(ArrayList<Node> nodes, int id){
+    NodeManager(ArrayList<Node> nodes, int id) {
         this(nodes, "untitled" + id);
     }
 
-    NodeManager(ArrayList<Node> nodes, String name){
+    NodeManager(ArrayList<Node> nodes, String name) {
         this.nodes = nodes;
         this.name = name;
         undo = new SizedStack<>(50);
         redo = new Stack<>();
     }
 
-    public Node get(int index){
+    public Node get(int index) {
         Node n = nodes.get(index);
         n.index = index;
         return n;
     }
-    public void set(int index, Node n){
+
+    public void set(int index, Node n) {
         nodes.set(index, n);
     }
-    public void add(int index, Node n){
+
+    public void add(int index, Node n) {
         nodes.add(index, n);
     }
-    public void add(Node n){
+
+    public void add(Node n) {
         nodes.add(n);
     }
-    public int size(){
+
+    public int size() {
         return nodes.size();
     }
-    public Node last(){
-        return nodes.get(nodes.size()-1);
+
+    public Node last() {
+        return nodes.get(nodes.size() - 1);
     }
-    public void clear(){
+
+    public void clear() {
         nodes.clear();
     }
 
-    public void remove(int n){
+    public void remove(int n) {
         nodes.remove(n);
     }
 
-    public List<Marker> getMarkers(){
-        return nodes.stream()
-                .filter(node -> node instanceof Marker)
-                .map(node -> (Marker) node)
-                .collect(Collectors.toList());
-    }
-    public List<Node> getNodes(){
-        return nodes.stream()
-                .filter(node -> !(node instanceof Marker))
-                .collect(Collectors.toList());
+    public List<Marker> getMarkers() {
+        return nodes
+            .stream()
+            .filter(node -> node instanceof Marker)
+            .map(node -> (Marker) node)
+            .collect(Collectors.toList());
     }
 
+    public List<Node> getNodes() {
+        return nodes
+            .stream()
+            .filter(node -> !(node instanceof Marker))
+            .collect(Collectors.toList());
+    }
 }

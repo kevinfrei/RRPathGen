@@ -1,10 +1,10 @@
 package jarhead;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
+import javax.swing.*;
 
 public class ExportPanel extends JPanel {
 
@@ -25,7 +25,7 @@ public class ExportPanel extends JPanel {
         this.setBackground(Color.darkGray.darker());
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
-        this.setMinimumSize(new Dimension(200,10));
+        this.setMinimumSize(new Dimension(200, 10));
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         this.add(dataType, BorderLayout.WEST);
@@ -41,20 +41,17 @@ public class ExportPanel extends JPanel {
         });
 
         dataType.addItemListener(e -> {
-            addDataType = e.getStateChange()==1;
+            addDataType = e.getStateChange() == 1;
             main.buttonPanel.export();
         });
         poseEstimate.addItemListener(e -> {
-            addPoseEstimate = e.getStateChange()==1;
+            addPoseEstimate = e.getStateChange() == 1;
             main.buttonPanel.export();
         });
-
     }
 
     @Override
     public Dimension getPreferredSize() {
         return super.getPreferredSize();
     }
-
-
 }
